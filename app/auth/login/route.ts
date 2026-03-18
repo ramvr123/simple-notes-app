@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/utils/supabase/server'
+import { createServerSupabase } from "@/app/actions/supabase"
 
 export async function POST(request: Request) {
   const formData = await request.formData()
   const email = formData.get('email') as string
   const password = formData.get('password') as string
 
-  const supabase = await createClient()
+  const supabase = await createServerSupabase()
 
   const { error } = await supabase.auth.signInWithPassword({
     email,

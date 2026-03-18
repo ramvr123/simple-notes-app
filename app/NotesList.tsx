@@ -1,9 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 
-export default function NotesList({ notes }: { notes: any[] }) {
+export default function NotesList({
+  notes,
+  onDelete,
+}: {
+  notes: any[];
+  onDelete: (id: string) => void;
+}) {
   const [filter, setFilter] = useState("all");
+  const [isPending, startTransition] = useTransition();
 
   let filteredNotes = [...notes];
 
@@ -17,13 +24,17 @@ export default function NotesList({ notes }: { notes: any[] }) {
 
   if (filter === "newest") {
     filteredNotes.sort(
-      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      (a, b) =>
+        new Date(b.created_at).getTime() -
+        new Date(a.created_at).getTime()
     );
   }
 
   if (filter === "oldest") {
     filteredNotes.sort(
-      (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      (a, b) =>
+        new Date(a.created_at).getTime() -
+        new Date(b.created_at).getTime()
     );
   }
 
@@ -57,6 +68,16 @@ export default function NotesList({ notes }: { notes: any[] }) {
             >
               Edit
             </a>
+
+            <button
+              onClick={() =>
+                startTransition(() => onDelete(note.id))
+              }
+              className="text-red-600 text-sm"
+              disabled={isPending}
+            >
+              {isPending ? "Deleting..." : "Delete"}
+            </button>
           </li>
         ))}
       </ul>

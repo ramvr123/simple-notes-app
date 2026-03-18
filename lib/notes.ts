@@ -1,8 +1,8 @@
-import { createClient } from '@/utils/supabase/server'
+import { createServerSupabase } from "@/app/actions/supabase"
 import type { Note } from '@/types/notes'
 
 export async function getNotes(search: string = '', filter: string = ''): Promise<Note[]> {
-  const supabase = await createClient()
+  const supabase = await createServerSupabase()
 
   const {
     data: { user }
@@ -35,7 +35,8 @@ export async function getNotes(search: string = '', filter: string = ''): Promis
 }
 
 export async function createNote(title: string, content: string) {
-  const supabase = await createClient()
+  const supabase = await createServerSupabase()
+
 
   const {
     data: { user }
