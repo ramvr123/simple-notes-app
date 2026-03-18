@@ -1,10 +1,11 @@
-import { createClient } from '@/utils/supabase/server'
+import { createServerSupabase } from '@/app/actions/supabase'
 import { updateNote } from '@/lib/updateNote'
 import { redirect } from 'next/navigation'
 
 export default async function EditNotePage(props: any) {
   const params = await props.params
-  const supabase = await createClient()
+  const supabase = await createServerSupabase()
+
 
   const {
     data: { user }

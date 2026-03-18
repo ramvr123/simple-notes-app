@@ -1,7 +1,8 @@
-import { createClient } from '@/utils/supabase/server'
+"use server"
+import { createServerSupabase } from "@/app/actions/supabase"
 
 export async function updateNote(id: string, title: string, content: string) {
-  const supabase = await createClient()
+  const supabase = await createServerSupabase()
 
   const {
     data: { user }
