@@ -1,24 +1,23 @@
 "use server"
 
 import { cookies } from "next/headers"
-import { createServerClient } from "@supabase/auth-helpers-nextjs"
+import { createServerClient } from "@supabase/ssr"
 
 export async function createServerSupabase() {
-  const cookieStore = await cookies()
+  const cookieStore = await cookies()   // ✅ FIX HERE
 
   return createServerClient(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value
+        getAll() {
+          return cookieStore.getAll()
         },
-        set(name: string, value: string, options: any) {
-          cookieStore.set({ name, value, ...options })
-        },
-        remove(name: string, options: any) {
-          cookieStore.set({ name, value: "", ...options })
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) =>
+            cookieStore.set(name, value, options)
+          )
         },
       },
     }
