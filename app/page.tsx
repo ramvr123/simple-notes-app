@@ -1,6 +1,7 @@
 import { getNotes, createNote } from "@/lib/notes"
 import { deleteNote } from "@/lib/deleteNote"
 import { getUser } from "@/app/actions/getUser"
+import { createServerSupabase } from "@/app/actions/supabase"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import NotesList from "./NotesList"
@@ -36,12 +37,22 @@ export default async function Page({ searchParams }: { searchParams: { search?: 
     revalidatePath("/")
   }
 
+  // ✅ LOGOUT (server action — FIXED)
+  async function handleLogout() {
+    "use server"
+
+    const supabase = await createServerSupabase()
+    await supabase.auth.signOut()
+
+    redirect("/login")
+  }
+
   return (
     <main className="p-6">
       <h1 className="text-2xl font-bold mb-4">Simple Notes</h1>
 
-      {/* LOGOUT */}
-      <form action="/logout" method="post" className="mb-6">
+      {/* ✅ LOGOUT FIXED */}
+      <form action={handleLogout} className="mb-6">
         <button type="submit" className="bg-red-600 text-white px-4 py-2 rounded">
           Logout
         </button>
