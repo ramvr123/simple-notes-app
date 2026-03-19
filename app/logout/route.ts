@@ -1,14 +1,13 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 import { createServerSupabase } from '@/app/actions/supabase'
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const supabase = await createServerSupabase()
   await supabase.auth.signOut()
 
-  return NextResponse.redirect(new URL('/login', request.url))
+  return NextResponse.redirect(new URL('/login', request.nextUrl.origin))
 }
 
-// ✅ ADD THIS
-export async function GET(request: Request) {
-  return NextResponse.redirect(new URL('/login', request.url))
+export async function GET(request: NextRequest) {
+  return NextResponse.redirect(new URL('/login', request.nextUrl.origin))
 }
